@@ -4,18 +4,19 @@ module ALU (alu_out, zero, funct, data1, data2);
 	output zero;
 	output reg [31:0] alu_out;
 	input [31:0] data1,data2;
-	input [2:0] funct;
+	input [3:0] funct;
 
-`define CERO 3'b000
-`define ADD 3'b001
-`define SUB 3'B010
-`define AND 3'b011
-`define OR 3'b100
-`define NOT 3'b101
-`define XOR 3'b110
+`define CERO 4'b0000
+`define ADD  4'b0001
+`define SUB  4'b0010
+`define AND  4'b0011
+`define OR   4'b0100
+`define NOT  4'b0101
+`define XOR  4'b0110
+`define LSL  4'b0111	
+`define RSL  4'b1000
 
-assign zero=~(|alu_out);
-
+	assign zero=~(|alu_out); // 
 always @(funct,data1,data2)
 begin
   case (funct)
