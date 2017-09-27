@@ -132,17 +132,40 @@ input [31:0] instruction;
 		end else if (op == 6'h0 && funct == 6'h2) begin // SRL
 			alu_control = 4'b1001;
 		end else if ((op == 6'h0 && funct == 6'h20) || op == 6'h8 || op == 6'h2B || op == 6'h23) begin  // ADD - signed
-			alu_control = 4'b1010;
-		end else if ((op == 6'h0 && funct == 6'h22) || op == 6'h4 || op == 6'h5) begin // SUB - signed - AND bne, beq
 			alu_control = 4'b1011;
+		end else if ((op == 6'h0 && funct == 6'h22) || op == 6'h4 || op == 6'h5) begin // SUB - signed - AND bne, beq
+			alu_control = 4'b1100;
 		end else begin
 			alu_control = 4'b1111;
-		end		
-
- 
+		end	
 		
 		
+ // This is the control unit for the PC register, the 4 bit instructions specify the type of the function that the program 
+ // counter will perform, these are and not limited to the following, for a J-ype instruction, fora normal increment,
+ // gets incremented by 4 for next instruction, for a write enable to the registers.
+		
 
+            if (op == 6'h2 || op == 6'h3) begin // j, jal
+	        pc_control = 3'b001;
+	    end 
+	else if (op == 6'h0 && funct == 6'h8) begin // jr
+		pc_control = 3'b010;
+	    end 
+		else if (op == 6'h4 && alu_zero == 1) begin // beq
+	        pc_control = 3'b011;
+	    end 
+		else if (op == 6'h5 && alu_zero == 0) begin // bne
+		pc_control = 3'b011;
+	    end 
+		else begin // Default
+		pc_control = 3'b000;
+		end
+		
+		
+	end
+		
+	end module 
+		
   
   
   
