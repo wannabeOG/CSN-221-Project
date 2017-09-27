@@ -40,10 +40,10 @@ input [31:0] instruction;
   reg [4:0] shamt;
   reg [5:0] funct;
   //reg [2:0] type;
-	reg [25:0] address;
-	reg [15:0] immediate;
+  reg [25:0] address;
+  reg [15:0] immediate;
   //6 bit opcode
-	wire [5:0] op;
+  wire [5:0] op;
   
   // Demarcating the instruction set
   
@@ -67,7 +67,7 @@ input [31:0] instruction;
 			funct		= instruction[5:0];
 		end
     //  J Format instruction. We are assigning it an opcode of 000010 for the decoder to understand that it is a J format instruction
-    else if (op == 6'b000010) begin 
+		else if (op == 6'b000010 || op == 6'b000011) begin 
 			address		= instruction[25:0]; // Jumping to the address that is given. 
 			immediate	= 16'b0000000000000000;
 			rs			= 5'b00000;
@@ -88,6 +88,61 @@ input [31:0] instruction;
 			//type		= 3'b010;
 			funct		= instruction[5:0];
 		end
+		
+		
+     
+// ALU MUX SELECT
+		
+ // ALU needs to be selected for R-Format and I-Format instructions so ALU_MUX_SELECT gets set to 1 and and gets set to 0 for  
+ // J-Format instructions.
+
+
+      if (!(op == 6'h0 || op == 6'b000010 || op == 6'b000011)) begin // J format
+      alu_mux_select = 1;
+      end 
+      else begin // R or I format
+      alu_mux_select = 0;
+      end
+
+// ALU CONTROL UNIT 
+		
+// ALU format is synchronized with the control unit wherein the alu_control specifies the type of the operaation that the ALU
+// will perform given the signal it receives from the control unit.
+		
+// Op code specifies the type of instruction that will be performed, and funct is an additional 6 bit instruction to tell the 
+// computer about the type of instruction that has to be performed by the ALU. The funct bits have been allotted in an 
+// arbitrary manner.
+
+                if (op == 6'h0 && funct == 6'h24) begin // AND
+			alu_control = 4'b0000;
+		end else if (op == 6'h0 && funct == 6'h25) begin // OR
+			alu_control = 4'b0001;
+		end else if (op == 6'h0 && funct == 6'h21) begin // ADD - unsigned
+			alu_control = 4'b0010; 
+		end else if (op == 6'h0 && funct == 6'h26) begin // XOR
+			alu_control = 4'b0011;
+		end else if (op == 6'h0 && funct == 6'h27) begin // NOR
+			alu_control = 4'b0100;
+		end else if (op == 6'h0 && funct == 6'h22) begin // SUBTRACT - unsigned
+			alu_control = 4'b0110;
+		end else if (op == 6'h0 && funct == 6'h2A) begin // SLT
+			alu_control = 4'b0111;
+		end else if (op == 6'h0 && funct == 6'h0) begin // SLL
+			alu_control = 4'b1000;
+		end else if (op == 6'h0 && funct == 6'h2) begin // SRL
+			alu_control = 4'b1001;
+		end else if ((op == 6'h0 && funct == 6'h20) || op == 6'h8 || op == 6'h2B || op == 6'h23) begin  // ADD - signed
+			alu_control = 4'b1010;
+		end else if ((op == 6'h0 && funct == 6'h22) || op == 6'h4 || op == 6'h5) begin // SUB - signed - AND bne, beq
+			alu_control = 4'b1011;
+		end else begin
+			alu_control = 4'b1111;
+		end		
+
+ 
+		
+		
+
   
   
   
