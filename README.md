@@ -8,5 +8,4 @@ It includes the following components:
 * Instruction Memory
 * Program Counter
 * Register File
-* Samar was here
 
