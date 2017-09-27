@@ -31,7 +31,7 @@
 	wdata,
 	wren
 );
-	// Input Ports
+	//Input Ports
 	input	clk;
   input [4:0]	raddr0;
 	input [4:0]	raddr1;
