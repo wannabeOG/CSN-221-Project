@@ -22,10 +22,7 @@
 module control unit {
   instruction,
 	data_mem_wren, 
-	reg_file_wren,
-	reg_file_dmux_select,
-	reg_file_rmux_select,
-	alu_mux_select,
+        alu_mux_select,
 	alu_control,
 	alu_zero,
 	pc_control
