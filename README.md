@@ -1,5 +1,5 @@
 # CSN-221-Project
-Implementation of a 32 bit RISC processor 
+Implementation of a 24 bit RISC processor 
 
 It includes the following components:
 * ALU
